@@ -3,12 +3,9 @@ import { createLock } from './createLock';
 import { printPrettyLine } from './utils/helpers';
 import { runtimeContext } from './utils/constants';
 import { FileStats, HandleConversionOpts } from './types';
+const path = require('path');
 
 const cwd = process.cwd();
-
-printPrettyLine();
-printPrettyLine('pnpm-lock-to-npm-lock');
-printPrettyLine();
 
 /** Runs a conversion flow driven by either a runtime context or a filepath to the pnpm-lock.yaml */
 function handleConversion({ ctx, pnpmPath }: HandleConversionOpts) {
@@ -20,16 +17,17 @@ function handleConversion({ ctx, pnpmPath }: HandleConversionOpts) {
 }
 
 /** Place an npm package-lock.json file in the cwd and build Stats. */
-function generateNpm(pnpmLockPath: string): Stats {
+export function generateNpm(pnpmLockPath: string): Stats {
   try {
-    const pnpmLock = readFileSync(`${cwd}/${pnpmLockPath}`, 'utf8');
+    const dir = path.dirname(pnpmLockPath);
+    const pnpmLock = readFileSync(`${pnpmLockPath}`, 'utf8');
     const npmLock = createLock(pnpmLock);
 
     process.stdout.write('Converting pnpm-lock.yaml to package-lock.json... ');
-    writeFileSync(`${cwd}/package-lock.json`, JSON.stringify(npmLock, null, 2));
+    writeFileSync(`${dir}/package-lock.json`, JSON.stringify(npmLock, null, 2));
     process.stdout.write('OK\n');
 
-    return statSync(`${cwd}/package-lock.json`);
+    return statSync(`${dir}/package-lock.json`);
   } catch (e) {
     process.stdout.write('FAIL\n');
     console.error('Error', e);
@@ -56,7 +54,7 @@ function handleConversionRUSH() {
 }
 
 /** Appends pnpmLock filepath to cwd and runs the conversion flow. */
-function handleConversionWithPath(pnpmLockFile: string | undefined): FileStats {
+export function handleConversionWithPath(pnpmLockFile: string | undefined): FileStats {
   try {
     const pnpmStat = statSync(`${cwd}/${pnpmLockFile}`);
     if (!pnpmStat.isFile()) throw new Error();
@@ -84,4 +82,3 @@ function reportStats({ pnpmStat, npmStat }: FileStats) {
   printPrettyLine();
 }
 
-module.exports = handleConversion;
