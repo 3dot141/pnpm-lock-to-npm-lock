@@ -3,7 +3,7 @@ import { createLock } from './createLock';
 import { printPrettyLine } from './utils/helpers';
 import { runtimeContext } from './utils/constants';
 import { FileStats, HandleConversionOpts } from './types';
-const path = require('path');
+import path = require('path');
 
 const cwd = process.cwd();
 
@@ -17,7 +17,26 @@ function handleConversion({ ctx, pnpmPath }: HandleConversionOpts) {
 }
 
 /** Place an npm package-lock.json file in the cwd and build Stats. */
-export function generateNpm(pnpmLockPath: string): Stats {
+export function generateNpm(pnpmLockPath: string): String {
+  try {
+    const dir = path.dirname(pnpmLockPath);
+    const pnpmLock = readFileSync(`${pnpmLockPath}`, 'utf8');
+    const npmLock = createLock(pnpmLock);
+
+    process.stdout.write('Converting pnpm-lock.yaml to package-lock.json... ');
+    writeFileSync(`${dir}/package-lock.json`, JSON.stringify(npmLock, null, 2));
+    process.stdout.write('OK\n');
+
+    return (`${dir}/package-lock.json`);
+  } catch (e) {
+    process.stdout.write('FAIL\n');
+    console.error('Error', e);
+    process.exit(1);
+  }
+}
+
+/** Place an npm package-lock.json file in the cwd and build Stats. */
+export function generateNpm2Stat(pnpmLockPath: string): Stats {
   try {
     const dir = path.dirname(pnpmLockPath);
     const pnpmLock = readFileSync(`${pnpmLockPath}`, 'utf8');
@@ -61,7 +80,7 @@ export function handleConversionWithPath(pnpmLockFile: string | undefined): File
 
     return {
       pnpmStat,
-      npmStat: generateNpm(pnpmLockFile as string)
+      npmStat: generateNpm2Stat(pnpmLockFile as string)
     };
   } catch (e) {
     console.error(

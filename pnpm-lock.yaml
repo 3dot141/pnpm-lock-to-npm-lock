@@ -1,32 +1,49 @@
-lockfileVersion: '6.0'
+lockfileVersion: '9.0'
 
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-dependencies:
-  yaml:
-    specifier: ~2.2.2
-    version: 2.2.2
+importers:
 
-devDependencies:
-  '@types/node':
-    specifier: ^20.10.6
-    version: 20.10.6
+  .:
+    dependencies:
+      yaml:
+        specifier: ~2.2.2
+        version: 2.2.2
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.6
+        version: 20.10.6
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
 
 packages:
 
-  /@types/node@20.10.6:
+  '@types/node@20.10.6':
     resolution: {integrity: sha512-Vac8H+NlRNNlAmDfGUP7b5h/KA+AtWIzuXy0E6OyP8f1tCLYAtPvKRRDJjAPqhpCb0t6U2j7/xqAuLEebW2kiw==}
-    dependencies:
-      undici-types: 5.26.5
-    dev: true
 
-  /undici-types@5.26.5:
+  typescript@5.7.3:
+    resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
+  undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
-    dev: true
 
-  /yaml@2.2.2:
+  yaml@2.2.2:
     resolution: {integrity: sha512-CBKFWExMn46Foo4cldiChEzn7S7SRV+wqiluAb6xmueD/fGyRHIhX8m14vVGgeFWjN540nKCNVj6P21eQjgTuA==}
     engines: {node: '>= 14'}
-    dev: false
+
+snapshots:
+
+  '@types/node@20.10.6':
+    dependencies:
+      undici-types: 5.26.5
+
+  typescript@5.7.3: {}
+
+  undici-types@5.26.5: {}
+
+  yaml@2.2.2: {}
